@@ -1,0 +1,34 @@
+# Install list of below mentioned packages
+install_list: ['epel-release','make','openssl-devel.x86_64','gcc-c++','git','python','gnuplot','make','gcc','tree', 'vim', 'wget', 'nano','ntp', 'curl','firewalld','unzip','bzip2','libselinux-python','libsemanage-python','libevent-2.0.21-4.el7.x86_64','docker']
+
+# user-name
+user: zerocrack
+
+# user-directory
+home_directory: '/home/{{user}}'
+
+# setting up /etc/security/limits.conf
+max_opening_filelimits: '{{user}} - nofile 65536'
+memory_lock: '{{user}} - memlock unlimited'
+max_number_of_process: '{{user}} - nproc unlimited'
+max_limits: '{{user}} - c unlimited'
+
+#creating user_directory
+HOME: '{{home_directory}}/stack/'
+DATA: '{{HOME}}/data/'
+LOGS: '{{HOME}}/logs/'
+BINARIES: '{{HOME}}/installer/'
+
+# .ssh directory path
+ssh_directory: '{{home_directory}}/.ssh'
+private_key_name: id_rsa
+public_key_name: id_rsa.pub
+
+# java_binary
+java_binary: jdk-8u101-linux-x64.tar.gz
+
+# Set java Version. after the extraction of java its the folder name.
+java_version: jdk1.8.0_101
+
+# java_location
+java_home: '{{HOME}}/{{java_version}}'

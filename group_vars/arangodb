@@ -1,0 +1,29 @@
+#Arangodb Server Vars Settings
+arangodb_binary: arangodb.tar.gz
+
+#Set Arangodb version
+arangodb_version: arangodb
+
+#Set arangodb home path
+arangodb_home_path: '{{HOME}}/{{arangodb_version}}'
+
+#arangodb bin dir
+arangodb_bin_dir: '{{arangodb_home_path}}/bin'
+
+#arangodb logs directory
+arangodb_logs_dir: '{{LOGS}}/{{arangodb_version}}/logs'
+
+#arangodb data directory
+arangodb_data: '{{DATA}}/{{arangodb_version}}'
+
+#arangodb agency directory
+arangodb_agency_dir: '{{arangodb_data}}/agency'
+
+#arangodb dbserver directory
+arangodb_dbserver_dir: '{{arangodb_data}}/dbserver'
+
+#arangodb coordinator directory
+arangodb_coordinator_dir: '{{arangodb_data}}/coordinator'
+
+#arangodb package
+arangodb_package: ['devtoolset-6-gcc-c++','devtoolset-6-gcc','devtoolset-6-gcc-gfortran','cmake3','cmake']

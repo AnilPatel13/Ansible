@@ -1,0 +1,24 @@
+#nginx Server Vars Settings
+
+nginx_binary: nginx.tar.gz
+
+#Set nginx version
+nginx_version: nginx
+
+#Set nginx home path
+nginx_home_path: '{{HOME}}/{{ nginx_version }}'
+
+#nginx Conf Dir path
+nginx_conf_dir: '{{nginx_home_path}}/nginx.conf'
+
+#nginx bin dir
+nginx_bin_dir: '{{nginx_home_path}}/bin'
+
+#nginx logs directory
+nginx_logs_dir: '{{LOGS}}/{{ nginx_version }}/logs'
+
+# Editig nginx.conf
+user_name: formcept
+worker_processes: 2
+worker_rlimit_nofile: 100000
+

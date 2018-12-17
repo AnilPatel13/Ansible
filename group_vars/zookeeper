@@ -1,0 +1,36 @@
+#Zookeeper Server Vars Settings
+
+#zookeeper-binary
+zookeeper_binary: zookeeper-3.4.8.tar.gz
+
+# Set Zookeeper Version
+zookeeper_version: zookeeper-3.4.8
+
+# Set zookeeper download path
+zookeeper_home_path: '{{HOME}}/{{zookeeper_version}}'
+
+#zookeeper Conf Dir path
+zookeeper_conf_dir: '{{zookeeper_home_path}}/conf'
+
+#zookeeper bin dir
+zookeeper_bin_dir: '{{zookeeper_home_path}}/bin'
+
+#zookeeper data directory
+zookeeper_data_directory: '{{DATA}}/{{zookeeper_version}}/data'
+
+#zookeeper logs directory
+zookeeper_logs_directory: '{{LOGS}}/{{zookeeper_version}}/logs'
+
+#zookeeper myid file path
+zookeeper_myid_file: '{{zookeeper_data_directory}}/myid'
+
+#zookeeper configurations
+tick_time: 2000
+data_dir: '{{zookeeper_data_directory}}'
+log_dir: '{{zookeeper_logs_directory}}'
+client_port: 2181
+maxClientCnxns: 500
+init_limit: 5
+sync_limit: 2
+
+

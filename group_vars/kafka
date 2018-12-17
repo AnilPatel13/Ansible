@@ -1,0 +1,31 @@
+#kafka Server Vars Settings
+
+#kafka-binary
+kafka_binary: kafka_2.12-1.0.0.tgz
+
+# Set kafka Version
+kafka_version: kafka_2.12-1.0.0
+
+# Set kafka home path
+kafka_home_path: '{{HOME}}/{{kafka_version}}'
+
+#kafka Conf Dir path
+kafka_conf_dir: '{{kafka_home_path}}/config'
+
+#kafka bin dir
+kafka_bin_dir: '{{kafka_home_path}}/bin'
+
+#kafka data directory
+kafka_data_directory: '{{DATA}}/{{kafka_version}}/data'
+
+#kafka logs directory
+kafka_logs_directory: '{{LOGS}}/{{kafka_version}}/logs'
+
+#kafka port
+port: 9092
+
+#number of partitions
+partition: 1
+
+#replication factor
+replication: 3

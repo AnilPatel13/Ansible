@@ -1,0 +1,30 @@
+#cassandra Server Vars Settings
+
+cassandra_binary: cassandra-3.11.1-bin.tar.gz 
+
+# Set cassandra Version. Below download url will fetch the extact version from cassandra stable section
+cassandra_version: apache-cassandra-3.11.1
+
+#Set cassandra download path
+cassandra_home_path: '{{HOME}}/{{cassandra_version}}'
+
+#User can modify below variables if any changes required.
+
+#cassandra Conf Dir path
+cassandra_conf_dir: '{{cassandra_home_path}}/conf'
+
+#cassandra sample conf file comes along with download package
+cassandra_sample_conf_file: cassandra.yaml
+
+# cassandra conf file name
+cassandra_conf_file: cassandra.yaml
+
+#cassandra bin Dir path
+cassandra_bin_dir: '{{cassandra_home_path}}/bin'
+
+#cassandra_data_directory
+cassandra_data_dir: '{{DATA}}/{{cassandra_version}}'
+
+
+#cassandra_log_directory
+cassandra_log_dir: '{{LOGS}}/{{cassandra_version}}/logs'

@@ -1,0 +1,51 @@
+#Hadoop Server Vars Settings
+hadoop_binary: hadoop-2.7.2.tar.gz
+
+#Set Hadoop version
+hadoop_version: hadoop-2.7.2
+
+#Set hadoop download path
+hadoop_home_path: '{{HOME}}/{{hadoop_version}}'
+
+#hadoop downlod url using CURL
+#hadoop_download_url: 'http://mirror.olnevhost.net/pub/apache/hadoop/{{ hadoop_version }}/{{ hadoop_version }}.tar.gz'
+
+#hadoop Conf Dir path
+hadoop_conf_dir: '{{hadoop_home_path}}/etc/hadoop'
+
+#hadoop sbin dir
+hadoop_sbin_dir: '{{hadoop_home_path}}/sbin'
+
+#hadoop bin dir
+hadoop_bin_dir: '{{hadoop_home_path}}/bin'
+
+#hadoop pid directory
+hadoop_pid_dir: '{{DATA}}/{{hadoop_version}}/pid'
+
+#hadoop logs directory
+hadoop_logs_dir: '{{LOGS}}/{{hadoop_version}}/logs'
+
+#hadoop tmp directory
+hadoop_tmp_dir: '{{DATA}}/{{hadoop_version}}/tmp'
+
+# dfs journalnode edits directory
+journalnode_edits: '{{DATA}}/{{hadoop_version}}/journalnode'
+
+#hadop namenode directory
+hadoop_namenode_dir: '{{DATA}}/{{hadoop_version}}/namenode'
+
+#hadop datanode directory
+hadoop_datanode_dir: '{{DATA}}/{{hadoop_version}}/datanode'
+
+
+#hadoop dfs.exclude file
+hadoop_dfs_exclude: '{{hadoop_home_path}}/etc/hadoop/dfs.exclude'
+
+#Hdfs-replication factor
+replication_factor: 3
+
+#namenode memory
+namenode_maximum_memory: 24g
+
+#datanode memory
+datanode_maximum_memory: 16g

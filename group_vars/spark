@@ -1,0 +1,47 @@
+#Spark Server Vars Settings
+spark_binary: spark-2.2.1-bin-hadoop2.7.tgz
+
+#Set spark version
+spark_version: spark-2.2.1-bin-hadoop2.7
+
+#Set Hadoop version
+hadoop_version: hadoop-2.7.2
+
+#Set hadoop download path
+hadoop_home_path: '{{HOME}}/{{hadoop_version}}'
+
+#hadoop Conf Dir path
+hadoop_conf_dir: '{{hadoop_home_path}}/etc/hadoop'
+
+#Set spark download path
+spark_home_path: '{{HOME}}/{{spark_version}}'
+
+#spark Conf Dir path
+spark_conf_dir: '{{spark_home_path }}/conf'
+
+#spark bin dir
+spark_bin_dir: '{{spark_home_path}}/sbin'
+
+#spark data directory
+spark_data_dir: '{{DATA}}/{{spark_version}}'
+
+#spark logs directory
+spark_logs_dir: '{{LOGS}}/{{spark_version}}/logs'
+
+#spark tmp directory
+spark_tmp_dir: '{{DATA}}/{{spark_version}}/tmp'
+
+#spark pid directory
+spark_pid_dir: '{{DATA}}/{{spark_version}}/pid'
+
+#spark worker directory
+spark_worker_dir: '{{DATA}}/{{spark_version}}/worker'
+
+#SPARK WORKER CORES
+spark_worker_cores: 4
+
+#SPARK WORKER MEMORY
+spark_worker_memory: 4G
+
+#SPARK worker instances
+spark_worker_instances: 2

@@ -1,0 +1,12 @@
+#Snappy Variable Settings
+
+snappy_binary: snappy-1.1.7.tar.gz
+
+#Set snappy version
+snappy_version: snappy-1.1.7
+
+#Setting snappy directory
+snappy_extract: '{{HOME}}'
+
+#snappy_home
+snappy_home: '{{HOME}}/{{snappy_version}}'

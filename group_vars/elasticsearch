@@ -1,0 +1,43 @@
+#elasticsearch Server Vars Settings
+
+elasticsearch_binary: elasticsearch-6.1.1.tar.gz  
+
+# Set elasticsearch Version. Below download url will fetch the extact version from elasticsearch stable section
+elasticsearch_version: elasticsearch-6.1.1 
+
+#Set elasticsearch download path
+elasticsearch_home_path: '{{HOME}}/{{elasticsearch_version}}'
+
+#User can modify below variables if any changes required.
+
+#elasticsearch Conf Dir path
+elasticsearch_conf_dir: '{{elasticsearch_home_path}}/config'
+
+#elasticsearch sample conf file comes along with download package
+elasticsearch_sample_conf_file: elasticsearch.yml
+
+# elasticsearch conf file name
+elasticsearch_conf_file: elasticsearch.yml
+
+#elasticsearch bin Dir path
+elasticsearch_bin_dir: '{{elasticsearch_home_path}}/bin'
+
+#elasticsearch_data_directory
+elasticsearch_data_dir: '{{DATA}}/{{elasticsearch_version}}'
+
+
+#elasticsearch_log_directory
+elasticsearch_log_dir: '{{LOGS}}/{{elasticsearch_version}}/logs'
+
+#elasticsearch_heap_size
+ES_HEAP_SIZE_XMS: 4g
+ES_HEAP_SIZE_XMX: 4g
+
+#elasticsearch cluster name
+ES_CLUSTER_NAME: escluster
+
+# elasticsearch transport.tcp.port
+transport_tcp_port: 9300
+
+# elasticsearch http.port
+http_port: 9200

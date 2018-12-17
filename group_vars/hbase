@@ -1,0 +1,47 @@
+#Hbase Server Vars Settings
+
+#hbase binary version
+hbase_binary: hbase-1.2.6.tar.gz 
+
+#Set Hbase version
+hbase_version: hbase-1.2.6
+
+#Set hbase download path
+hbase_home_path: '{{HOME}}/{{hbase_version}}'
+
+#User can modify below variables if any changes required.
+#hbase downlod url using CURL
+#hbase_download_url: 'http://mirror.olnevhost.net/pub/apache/hbase/{{ hbase_version }}/{{ hbase_version }}.tar.gz'
+
+#hbase Conf Dir path
+hbase_conf_dir: '{{hbase_home_path}}/conf'
+
+#hbase bin dir
+hbase_bin_dir: '{{hbase_home_path}}/bin'
+
+#hbase data directory
+hbase_data_dir: '{{DATA}}/{{ hbase_version }}'
+
+#hbase logs directory
+hbase_logs_dir: '{{LOGS}}/{{ hbase_version }}/logs'
+
+#hbase tmp directory
+hbase_tmp_dir: '{{DATA}}/{{ hbase_version }}/tmp'
+
+#hbase pid directory
+hbase_pid_dir: '{{DATA}}/{{ hbase_version }}/pid'
+
+#hbase_heapsize
+hbase_heap_size: 16G
+
+#hbase_OFFHEAPSIZE
+hbase_OFFHEAPSIZE: 8G
+
+#hbase maximum memory
+hbase_xmx: 16g
+
+#hbase permision size
+hbase_PermSize: 128m
+
+#hbase maximum-Direct-memory
+hbase_MaxDirectMemorySize: 8g
