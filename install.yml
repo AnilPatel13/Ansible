@@ -1,0 +1,87 @@
+---
+# This playbook deploys Java-1.8, HDFS, Zookeeper, Elasticsearch, Spark, HBase, Kafka,cassendra,arangodb,nginx and kubernethes on CentOS-7
+
+- hosts: common
+  gather_facts: false
+  become: yes
+  become_user: root
+  vars_files:
+    - group_vars/common
+    - group_vars/hadoop
+    - group_vars/zookeeper
+    - group_vars/hbase
+    - group_vars/spark
+    - group_vars/elasticsearch
+    - group_vars/snappy
+    - group_vars/kafka
+    - group_vars/cassandra
+    - group_vars/arangodb
+    - group_vars/nginx
+    - group_vars/kubernetes
+  roles:
+    - common
+
+- hosts: master
+  gather_facts: false
+  become: yes
+  become_user: zerocrack
+  vars_files:
+    - group_vars/common
+    - group_vars/hadoop
+    - group_vars/zookeeper
+    - group_vars/hbase
+    - group_vars/spark
+    - group_vars/elasticsearch
+    - group_vars/snappy
+    - group_vars/kafka
+    - group_vars/cassandra
+    - group_vars/arangodb
+    - group_vars/nginx
+    - group_vars/kubernetes
+  roles:
+    - kubernetes
+    - hadoop
+    - zookeeper
+    - hbase
+    - spark
+    - elasticsearch
+    - snappy
+    - kafka
+    - cassandra
+    - memcached
+    - datomic
+    - nginx
+    - bashrc
+
+- hosts: slaves
+  gather_facts: false
+  become: yes
+  become_user: formcept
+  vars_files:
+    - group_vars/common
+    - group_vars/hadoop
+    - group_vars/zookeeper
+    - group_vars/hbase
+    - group_vars/spark
+    - group_vars/elasticsearch
+    - group_vars/snappy
+    - group_vars/kafka
+    - group_vars/cassandra
+    - group_vars/memcached
+    - group_vars/datomic
+    - group_vars/arangodb
+    - group_vars/nginx
+  roles:
+    - kubernetes
+    - hadoop
+    - zookeeper
+    - hbase
+    - spark
+    - elasticsearch
+    - snappy
+    - kafka
+    - cassandra
+    - memcached
+    - datomic
+    - nginx
+    - bashrc
