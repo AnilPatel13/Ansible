@@ -1,0 +1,19 @@
+- hosts: scalingdown
+  gather_facts: false
+  become_user: root
+  vars_files:
+    - group_vars/common
+    - group_vars/hadoop
+    - group_vars/zookeeper
+    - group_vars/hbase
+    - group_vars/spark
+    - group_vars/elasticsearch
+    - group_vars/snappy
+    - group_vars/kafka
+    - group_vars/cassandra
+    - group_vars/arangodb
+    - group_vars/nginx
+    - group_vars/kubernetes
+  roles:
+    - mecbot_services/mecbot-cluster-destroy
+
