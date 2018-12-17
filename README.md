@@ -83,5 +83,5 @@ once the installation is completed you can login into that machine and verify it
 # default username is zerocrack & password is also zerocrack
 $ su - zerocrack
 ```
-For further reference please refer [http://docs.ansible.com/ansible/latest/user_guide/intro_getting_started.html](http://docs.ansible.com/ansible/latest/user_guide/intro_getting_started.html)
+For further reference please refer [https://medium.com/formcept/configuration-management-and-continuous-deployment-cd0892dce998](https://medium.com/formcept/configuration-management-and-continuous-deployment-cd0892dce998)
 
