@@ -1,0 +1,77 @@
+---
+- name: step 1 | Checking {{elasticsearch_version}} binary
+  become: yes
+  become_user: '{{user}}'
+  stat:
+   path: "{{BINARIES}}/{{elasticsearch_binary}}"
+  register: folder_stats
+
+- name: Step 2 | copy {{elasticsearch_version}}
+  become: yes
+  become_user: '{{user}}'
+  copy:
+    src: ./files/{{elasticsearch_binary}}
+    dest: '{{BINARIES}}'
+    owner: '{{user}}'
+    group: '{{user}}'
+  when: not folder_stats.stat.exists
+
+- name: step 3 | check {{elasticsearch_version}} directory
+  become: yes
+  become_user: '{{user}}'
+  stat:
+   path: "{{elasticsearch_home_path}}"
+  register: folder_stats
+
+- name: step 4 | extract {{elasticsearch_version}}
+  become: yes
+  become_user: '{{user}}'
+  unarchive:
+    src: ./files/{{elasticsearch_binary}}
+    dest: '{{HOME}}'
+    owner: '{{user}}'
+    group: '{{user}}'
+  when: not folder_stats.stat.exists
+
+- name: step 5 |  Checking elasticsearch_data_dir directory exist or not
+  become: yes
+  become_user: '{{user}}'
+  stat:
+   path: "{{elasticsearch_data_dir}}"
+  register: folder_stats
+
+- name: Step 6 | create elasticsearch_data_dir directory
+  become: yes
+  become_user: '{{user}}'
+  file:
+    path: '{{elasticsearch_data_dir}}'
+    state: directory
+    owner: '{{user}}'
+    group: '{{user}}'
+    mode: 0755
+  when: not folder_stats.stat.exists
+
+- name: step 7 |  Checking elasticsearch_log_dir directory exist or not
+  become: yes
+  become_user: '{{user}}'
+  stat:
+   path: "{{elasticsearch_log_dir}}"
+  register: folder_stats
+
+- name: Step 8 | create elasticsearch_log_dir directory
+  become: yes
+  become_user: '{{user}}'
+  file:
+    path: '{{elasticsearch_log_dir}}'
+    state: directory
+    owner: '{{user}}'
+    group: '{{user}}'
+    mode: 0755
+  when: not folder_stats.stat.exists
+
+- name: Step 9 | copy config files
+  become_user: '{{user}}'
+  template: src={{ item.src }} dest={{ item.dest }}
+  with_items: 
+   - { src: "elasticsearch_master.yml", dest: '{{elasticsearch_conf_dir}}/elasticsearch.yml' }
+   - { src: "jvm.options", dest: '{{elasticsearch_conf_dir}}/jvm.options'}

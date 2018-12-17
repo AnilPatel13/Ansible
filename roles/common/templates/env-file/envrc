@@ -1,0 +1,83 @@
+#Environment variable
+export HOME={{HOME}}
+export DATA={{DATA}}
+export LOGS={{LOGS}}
+export USER_DATA=$HOME/data
+export INSTALLER={{BINARIES}}
+
+
+#{{arangodb_version}}
+export ARANGODB_HOME={{arangodb_home_path}}
+export PATH=$PATH:$ARANGODB_HOME/bin
+
+#{{java_version}}
+export JAVA_HOME={{java_home}}
+export PATH=$PATH:$JAVA_HOME/bin
+
+#cluster home
+export cluster_HOME=$HOME/cfiles
+export PATH=$PATH:$cluster_HOME
+
+#{{snappy_version}}
+export SNAPPY_HOME={{snappy_home}}
+
+#{{hadoop_version}}
+export HADOOP_HOME={{hadoop_home_path}}
+export PATH=$PATH:$HADOOP_HOME/sbin
+export PATH=$PATH:$HADOOP_HOME/bin
+export HADOOP_DATA=$DATA/{{hadoop_version}}
+export HADOOP_LOGS=$LOGS/{{hadoop_version}}
+
+#{{zookeeper_version}}
+export ZK_HOME={{zookeeper_home_path}}
+export PATH=$PATH:$ZK_HOME/bin
+export ZK_DATA=$DATA/{{zookeeper_version}}
+export ZK_LOGS=$LOGS/{{zookeeper_version}}
+export ZOO_LOG_DIR=$ZK_LOGS
+
+#{{hbase_binary}}
+export HBASE_HOME={{hbase_home_path}}
+export PATH=$PATH:$HBASE_HOME/bin
+export HBASE_LOGS=$LOGS/{{hbase_version}}
+export HBASE_DATA=$DATA/{{hbase_version}}
+
+#{{elasticsearch_version}}
+export ES_HOME={{elasticsearch_home_path}}
+export PATH=$PATH:$ES_HOME/bin
+export ES_LOGS=$FC_LOGS/{{elasticsearch_version}}
+
+#{{spark_version}}
+export SPARK_HOME={{spark_home_path}}
+export PATH=$PATH:$SPARK_HOME/sbin
+export SPARK_LOGS=$LOGS/{{spark_version}}
+
+# Start BOT.
+alias start-bot="/bin/bash {{HOME}}/services/start.sh"
+
+# Stop BOT
+alias stop-bot="/bin/bash {{HOME}}/services/stop.sh"
+
+#{{kafka_version}}
+export KAFKA_HOME={{kafka_home_path}}
+export PATH=$PATH:$KAFKA_HOME/bin
+
+#start-kafka
+alias start-kafka="{{kafka_bin_dir}}/kafka-server-start.sh {{kafka_conf_dir}}/server.properties"
+
+#stop-kafka
+alias stop-kafka="{{kafka_bin_dir}}/kafka-server-stop.sh {{kafka_conf_dir}}/server.properties"
+
+#create topic
+alias create-topic="{{kafka_bin_dir}}/kafka-topics.sh --create --zookeeper {% for node in groups['common'] %}{{ node }}:2181{% if not loop.last %},{% endif %}{% endfor %} --replication-factor {{replication}} --partitions 1 --topic $var1"
+
+#list topic 
+alias list-topic="{{kafka_bin_dir}}/kafka-topics.sh --list --zookeeper {% for node in groups['common'] %}{{ node }}:2181{% if not loop.last %},{% endif %}{% endfor %}"
+
+#producer 
+alias producer="{{kafka_bin_dir}}/kafka-console-producer.sh --broker-list {% for node in groups['common'] %}{{ node }}:9092{% if not loop.last %},{% endif %}{% endfor %} --topic $var1"
+
+#consumer
+alias consumer="{{kafka_bin_dir}}/kafka-console-consumer.sh --zookeeper {% for node in groups['common'] %}{{ node }}:2181{% if not loop.last %},{% endif %}{% endfor %} --from-beginning --topic $var1"
+
+#Cassandra
+export CASSANDRA_HOME={{cassandra_home_path}}

@@ -1,0 +1,76 @@
+---
+- name: step 1 | Checking {{kafka_version}} binary
+  become: yes
+  become_user: '{{user}}'
+  stat:
+   path: "{{BINARIES}}/{{kafka_binary}}"
+  register: folder_stats
+
+- name: step 2 | copy {{kafka_version}}
+  become: yes
+  become_user: '{{user}}'
+  copy:
+    src: ./files/{{kafka_binary}}
+    dest: '{{BINARIES}}'
+    owner: '{{user}}'
+    group: '{{user}}'
+  when: not folder_stats.stat.exists
+
+- name: step 3 | check kafka directory
+  become: yes
+  become_user: '{{user}}'
+  stat:
+   path: "{{kafka_home_path}}"
+  register: folder_stats
+
+- name: step 4 | extract {{kafka_version}}
+  become: yes
+  become_user: '{{user}}'
+  unarchive:
+    src: ./files/{{kafka_binary}}
+    dest: '{{HOME}}'
+    owner: '{{user}}'
+    group: '{{user}}'
+  when: not folder_stats.stat.exists
+
+- name: step 5 |  Checking kafka_data_directory directory exist or not
+  become: yes
+  become_user: '{{user}}'
+  stat:
+   path: "{{kafka_data_directory}}"
+  register: folder_stats
+
+- name: Step 6 | create kafka_data_directory directory
+  become: yes
+  become_user: '{{user}}'
+  file:
+    path: '{{kafka_data_directory}}'
+    state: directory
+    owner: '{{user}}'
+    group: '{{user}}'
+    mode: 0755
+  when: not folder_stats.stat.exists
+
+- name: step 7 |  Checking kafka_logs_directory directory exist or not
+  become: yes
+  become_user: '{{user}}'
+  stat:
+   path: "{{kafka_logs_directory}}"
+  register: folder_stats
+
+- name: Step 8 | create kafka_logs_directory directory
+  become: yes
+  become_user: '{{user}}'
+  file:
+    path: '{{kafka_logs_directory}}'
+    state: directory
+    owner: '{{user}}'
+    group: '{{user}}'
+    mode: 0755
+  when: not folder_stats.stat.exists
+
+- name: Step 9 | Copy config files
+  become_user: '{{user}}'
+  template: src={{ item.src }} dest={{ item.dest }}
+  with_items:    
+   - { src: "server.properties", dest: '{{kafka_conf_dir}}' }

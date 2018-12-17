@@ -1,0 +1,11 @@
+---
+# file: roles/hadoop/handlers/main.yml
+
+- name: start hdfs
+  shell: start-dfs.sh
+  ignore_errors: yes
+
+
+- name: stop hdfs
+  shell: stop-dfs.sh
+  ignore_errors: yes

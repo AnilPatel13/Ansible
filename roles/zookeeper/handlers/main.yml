@@ -1,0 +1,11 @@
+---
+# file: roles/zookeeper/handlers/main.yml
+
+- name: start zookepper
+  shell: zkServer.sh start
+  ignore_errors: yes
+
+
+- name: stop zookeeper
+  shell: zkServer.sh stop
+  ignore_errors: yes

@@ -1,0 +1,109 @@
+---
+- name: step 1 | Checking {{hbase_version}} binary
+  become: yes
+  become_user: '{{user}}'
+  stat:
+   path: "{{BINARIES}}/{{hbase_binary}}"
+  register: folder_stats
+
+- name: step 2 | copy {{hbase_version}} 
+  become: yes
+  become_user: '{{user}}'
+  copy:
+    src: ./files/{{ hbase_binary }}
+    dest: '{{BINARIES}}'
+    owner: '{{user}}'
+    group: '{{user}}'
+  when: not folder_stats.stat.exists
+
+- name: step 3 | check hbase directory
+  become: yes
+  become_user: '{{user}}'
+  stat:
+   path: "{{hbase_home_path}}"
+  register: folder_stats
+
+- name: step 4 | extract {{hbase_version}}
+  become: yes
+  become_user: '{{user}}'
+  unarchive:
+    src: ./files/{{ hbase_binary }}
+    dest: '{{HOME}}'
+    owner: '{{user}}'
+    group: '{{user}}'
+  when: not folder_stats.stat.exists
+
+- name: step 5 |  Checking hbase_logs_dir directory exist or not
+  become: yes
+  become_user: '{{user}}'
+  stat:
+   path: "{{hbase_logs_dir}}"
+  register: folder_stats
+
+- name: Step 6 | create hbase_logs_dir directory
+  become: yes
+  become_user: '{{user}}'
+  file:
+    path: '{{hbase_logs_dir}}'
+    state: directory
+    owner: '{{user}}'
+    group: '{{user}}'
+    mode: 0755
+  when: not folder_stats.stat.exists
+
+- name: step 7 |  Checking hbase_tmp_dir directory exist or not
+  become: yes
+  become_user: '{{user}}'
+  stat:
+   path: "{{hbase_tmp_dir}}"
+  register: folder_stats
+
+- name: Step 8 | create hbase_tmp_dir directory
+  become: yes
+  become_user: '{{user}}'
+  file:
+    path: '{{hbase_tmp_dir}}'
+    state: directory
+    owner: '{{user}}'
+    group: '{{user}}'
+    mode: 0755
+  when: not folder_stats.stat.exists
+
+- name: step 9 |  Checking hbase_pid_dir directory exist or not
+  become: yes
+  become_user: '{{user}}'
+  stat:
+   path: "{{hbase_pid_dir}}"
+  register: folder_stats
+
+- name: Step 10 | create hbase_pid_dir directory
+  become: yes
+  become_user: '{{user}}'
+  file:
+    path: '{{hbase_pid_dir}}'
+    state: directory
+    owner: '{{user}}'
+    group: '{{user}}'
+    mode: 0755
+  when: not folder_stats.stat.exists
+
+- name: step 11 | copy config files
+  become_user: '{{user}}'
+  template: src={{ item.src }} dest={{ item.dest }}
+  with_items:
+   - { src: "hbase-env.sh", dest: '{{ hbase_conf_dir }}' }
+   - { src: "hbase-site.xml", dest: '{{ hbase_conf_dir }}' }
+   - { src: "log4j.properties", dest: '{{ hbase_conf_dir }}' }
+   - { src: "regionservers", dest: '{{ hbase_conf_dir }}' }
+  when: groups['master'] | length | int == 1
+
+- name: step 11 | copy config files
+  become_user: '{{user}}'
+  template: src={{ item.src }} dest={{ item.dest }}
+  with_items:
+   - { src: "backup-masters", dest: '{{ hbase_conf_dir }}' }
+   - { src: "hbase-env.sh", dest: '{{ hbase_conf_dir }}' }
+   - { src: "hbase-site.xml_ha", dest: '{{ hbase_conf_dir }}/hbase-site.xml' }
+   - { src: "log4j.properties", dest: '{{ hbase_conf_dir }}' }
+   - { src: "regionservers", dest: '{{ hbase_conf_dir }}' }
+  when: groups['master'] | length | int > 1

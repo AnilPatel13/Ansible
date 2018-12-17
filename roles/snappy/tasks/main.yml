@@ -1,0 +1,51 @@
+---
+- name: step 1 | Checking {{snappy_version}} binary
+  become: yes
+  become_user: '{{user}}'
+  stat:
+   path: "{{BINARIES}}/{{snappy_binary}}"
+  register: folder_stats
+
+- name: step 2 | copy {{snappy_version}}
+  become: yes
+  become_user: '{{user}}'
+  copy:
+    src: ./files/{{snappy_binary}}
+    dest: '{{BINARIES}}'
+    owner: '{{user}}'
+    group: '{{user}}'
+  when: not folder_stats.stat.exists
+
+- name: step 3 | check snappy directory
+  become: yes
+  become_user: '{{user}}'
+  stat:
+   path: "{{snappy_home}}"
+  register: folder_stats
+
+- name: step 4 | extract {{snappy_version}}
+  become: yes
+  become_user: '{{user}}'
+  unarchive:
+    src: ./files/{{snappy_binary}}
+    dest: '{{snappy_extract}}'
+    owner: '{{user}}'
+    group: '{{user}}'
+
+- name: step 5 | create build directory
+  become: yes
+  become_user: '{{user}}'
+  file:
+   path: '{{snappy_home}}/build'
+   state: directory
+   owner: '{{user}}'
+   group: '{{user}}'
+   mode: 0755
+
+- name: step 6 | configuring snappy
+  become: yes
+  become_user: '{{user}}'
+  shell: "{{ item }} chdir={{snappy_home}}/build"
+  with_items:
+    - cmake3 ..
+    - make

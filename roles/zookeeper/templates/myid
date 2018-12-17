@@ -1,0 +1,16 @@
+{% for server in groups['master'] %}
+{% if server not in groups['slaves'] %}
+{% if server == inventory_hostname %}
+{{loop.index}}
+{% endif %}
+{% endif %}
+{% endfor %}
+{% set count1 = groups['master'] | length | int %}
+{% for server in groups['slaves'] %}
+{% if server not in groups['master'] %}
+{% set count1 = count1 + 1 %}
+{% if server == inventory_hostname %}
+{{count1}}
+{% endif %}
+{% endif %}
+{% endfor %}

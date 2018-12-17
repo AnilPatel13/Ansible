@@ -1,0 +1,21 @@
+{% set cnt = groups['master'] | length | int %}
+{% if cnt > 1 %}
+{% for server in groups['master'] %}
+{% if loop.index > 1 %}
+{% if server not in groups['slaves'] %}
+{{ server }}
+{% endif %}
+{% endif %}
+{% endfor %}
+{% endif %}
+{% set count = groups['slaves'] | length | int %}
+{% if count == 0 %}
+{% if cnt == 1 %}
+{{ groups['master'][0] }}
+{% endif %}
+{% endif %}
+{% for server in groups['slaves'] %}
+{% if server not in groups['master'] %}
+{{ server }}
+{% endif %}
+{% endfor %}

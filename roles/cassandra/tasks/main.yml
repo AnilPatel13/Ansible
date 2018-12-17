@@ -1,0 +1,88 @@
+---
+- name: step 1 | Checking {{cassandra_version}} binary
+  become: yes
+  become_user: '{{user}}'
+  stat:
+   path: "{{BINARIES}}/{{cassandra_binary}}"
+  register: folder_stats
+
+- name: Step 2 | copy {{cassandra_version}}
+  become: yes
+  become_user: '{{user}}'
+  copy:
+    src: ./files/{{cassandra_binary}}
+    dest: '{{BINARIES}}'
+    owner: '{{user}}'
+    group: '{{user}}'
+  when: not folder_stats.stat.exists
+
+- name: step 3 | check {{cassandra_version}} directory
+  become: yes
+  become_user: '{{user}}'
+  stat:
+   path: "{{cassandra_home_path}}"
+  register: folder_stats
+
+- name: step 4 | extract {{cassandra_version}}
+  become: yes
+  become_user: '{{user}}'
+  unarchive:
+    src: ./files/{{cassandra_binary}}
+    dest: '{{HOME}}'
+    owner: '{{user}}'
+    group: '{{user}}'
+  when: not folder_stats.stat.exists
+
+- name: step 5 |  Checking cassandra_data_dir directory exist or not
+  become: yes
+  become_user: '{{user}}'
+  stat:
+   path: "{{cassandra_data_dir}}"
+  register: folder_stats
+
+- name: Step 6 | create cassandra_data_dir directory
+  become: yes
+  become_user: '{{user}}'
+  file:
+    path: '{{cassandra_data_dir}}'
+    state: directory
+    owner: '{{user}}'
+    group: '{{user}}'
+    mode: 0755
+  when: not folder_stats.stat.exists
+
+- name: step 7 |  Checking cassandra_log_dir directory exist or not
+  become: yes
+  become_user: '{{user}}'
+  stat:
+   path: "{{cassandra_log_dir}}"
+  register: folder_stats
+
+- name: Step 8 | create cassandra_log_dir directory
+  become: yes
+  become_user: '{{user}}'
+  file:
+    path: '{{cassandra_log_dir}}'
+    state: directory
+    owner: '{{user}}'
+    group: '{{user}}'
+    mode: 0755
+  when: not folder_stats.stat.exists
+
+- name: Step 9 | copy config files
+  become_user: '{{user}}'
+  template: src={{ item.src }} dest={{ item.dest }}
+  with_items: 
+   - { src: "cassandra.yaml", dest: '{{cassandra_conf_dir}}/cassandra.yaml' }
+
+- name: Step 10 | copy env files
+  become_user: '{{user}}'
+  template: src={{ item.src }} dest={{ item.dest }}
+  with_items: 
+   - { src: "cassandra-env.sh", dest: '{{cassandra_conf_dir}}/cassandra-env.sh' }
+
+- name: Step 11 | copy logback files
+  become_user: '{{user}}'
+  template: src={{ item.src }} dest={{ item.dest }}
+  with_items: 
+   - { src: "logback.xml", dest: '{{cassandra_conf_dir}}/logback.xml' }   

@@ -1,0 +1,128 @@
+---
+
+- name: step 1 | check if arangodb package is already installed
+  yum:
+    pkg="{{arangodb_package}}"
+  check_mode: true
+  register: pkg_installed
+
+- name: Step 2 | install arangodb required packages
+  become: yes
+  become_user: root
+  yum: pkg={{item}} state=installed
+  with_items: 
+   - '{{arangodb_package}}'
+  when: pkg_installed.changed
+
+- name: step 3 | Checking {{arangodb_version}} binary
+  become: yes
+  become_user: '{{user}}'
+  stat:
+   path: "{{BINARIES}}/{{arangodb_binary}}"
+  register: folder_stats
+
+- name: step 4 | copy {{arangodb_version}} binary
+  become: yes
+  become_user: '{{user}}'
+  copy:
+    src: ./files/{{arangodb_binary}}
+    dest: '{{BINARIES}}'
+    owner: '{{user}}'
+    group: '{{user}}'
+  when: not folder_stats.stat.exists
+
+- name: step 5 | check {{arangodb_version}} home directory
+  become: yes
+  become_user: '{{user}}'
+  stat:
+   path: "{{HOME}}/arangodb"
+  register: folder_stats
+
+- name: step 6 | extract {{arangodb_version}}
+  become: yes
+  become_user: '{{user}}'
+  unarchive:
+    src: ./files/{{arangodb_binary}}
+    dest: '{{HOME}}'
+    owner: '{{user}}'
+    group: '{{user}}'
+  when: not folder_stats.stat.exists
+
+- name: step 7 |  Checking arangodb_logs_dir directory exist or not
+  become: yes
+  become_user: '{{user}}'
+  stat:
+   path: "{{arangodb_logs_dir}}"
+  register: folder_stats
+
+- name: Step 8 | create arangodb_logs_dir directory
+  become: yes
+  become_user: '{{user}}'
+  file:
+    path: '{{arangodb_logs_dir}}'
+    state: directory
+    owner: '{{user}}'
+    group: '{{user}}'
+    mode: 0755
+  when: not folder_stats.stat.exists
+
+- name: step 9 |  Checking arangodb_agency_dir directory exist or not
+  become: yes
+  become_user: '{{user}}'
+  stat:
+   path: "{{arangodb_agency_dir}}"
+  register: folder_stats
+
+- name: Step 10 | create arangodb_agency_dir directory
+  become: yes
+  become_user: '{{user}}'
+  file:
+    path: '{{arangodb_agency_dir}}'
+    state: directory
+    owner: '{{user}}'
+    group: '{{user}}'
+    mode: 0755
+  when: not folder_stats.stat.exists
+
+- name: step 11 |  Checking arangodb_dbserver_dir directory exist or not
+  become: yes
+  become_user: '{{user}}'
+  stat:
+   path: "{{arangodb_dbserver_dir}}"
+  register: folder_stats
+
+- name: Step 12 | create arangodb_dbserver_dir directory
+  become: yes
+  become_user: '{{user}}'
+  file:
+    path: '{{arangodb_dbserver_dir}}'
+    state: directory
+    owner: '{{user}}'
+    group: '{{user}}'
+    mode: 0755
+  when: not folder_stats.stat.exists
+
+- name: step 13 |  Checking arangodb_coordinator_dir directory exist or not
+  become: yes
+  become_user: '{{user}}'
+  stat:
+   path: "{{arangodb_coordinator_dir}}"
+  register: folder_stats
+
+- name: Step 14 | create arangodb_coordinator_dir directory
+  become: yes
+  become_user: '{{user}}'
+  file:
+    path: '{{arangodb_coordinator_dir}}'
+    state: directory
+    owner: '{{user}}'
+    group: '{{user}}'
+    mode: 0755
+  when: not folder_stats.stat.exists
+
+- name: step 15 | Installing gcc-v-6.1.1
+  become: yes
+  become_user: root
+  shell: "{{ item }}"
+  with_items:
+    - scl enable devtoolset-6 bash && source /opt/rh/devtoolset-6/enable

@@ -1,0 +1,37 @@
+#!/bin/bash
+# crun
+# stupid script to run a command on slaves
+
+echo ""
+if [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
+    echo 'Runs command on slaves defined in ~/.cslaves'
+    echo 'Usage: crun [command]'
+    exit 0
+fi
+
+if [ $# -lt 1 ]; then
+    echo 'Usage: crun [command]'
+    exit
+fi
+
+
+cmd=$@
+
+OIFS=$IFS
+IFS='
+'
+
+option=''
+
+if [ "$(echo $cmd | head -c 4)" = "sudo" ]; then
+    option='-t'
+fi
+
+for slave in $(cat ~/.cslaves); do
+    if [ ${#slave} -gt 0 ] && [ ! "$(echo $slave | cut -c 1)" = "#" ]; then
+        echo "$slave ---"
+        ssh -C $option $slave $cmd
+        echo
+    fi
+done
+IFS=$OIFS

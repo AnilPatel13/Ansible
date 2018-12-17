@@ -1,0 +1,10 @@
+---
+# file: roles/elasticsearch/handlers/main.yml
+
+- name: start elasticsearch
+  #service: name=zookeeper-server state=restarted
+  #shell: cd '{{ zookeeper_bin_dir }}' && sudo '{{ zookeeper_start_script }}' start
+  shell: elasticsearch -d
+  ignore_errors: yes
+
+

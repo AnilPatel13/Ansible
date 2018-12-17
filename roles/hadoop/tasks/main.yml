@@ -1,0 +1,179 @@
+---
+- name: step 1 | Checking {{hadoop_version}} binary
+  become: yes
+  become_user: '{{user}}'
+  stat:
+   path: "{{BINARIES}}/{{hadoop_binary}}"
+  register: folder_stats
+
+- name: step 2 | copy {{hadoop_version}}
+  become: yes
+  become_user: '{{user}}'
+  copy:
+    src: ./files/{{hadoop_binary}}
+    dest: '{{BINARIES}}'
+    owner: '{{user}}'
+    group: '{{user}}'
+  when: not folder_stats.stat.exists
+
+- name: step 3 | check hadoop home directory
+  become: yes
+  become_user: '{{user}}'
+  stat:
+   path: "{{hadoop_home_path}}"
+  register: folder_stats
+
+- name: step 4 | extract {{hadoop_version}}
+  become: yes
+  become_user: '{{user}}'
+  unarchive:
+    src: ./files/{{hadoop_binary}}
+    dest: '{{HOME}}'
+    owner: '{{user}}'
+    group: '{{user}}'
+  when: not folder_stats.stat.exists
+
+- name: step 5 |  Checking hadoop_logs_dir directory exist or not
+  become: yes
+  become_user: '{{user}}'
+  stat:
+   path: "{{hadoop_logs_dir}}"
+  register: folder_stats
+
+- name: Step 6 | create hadoop_logs_dir directory
+  become: yes
+  become_user: '{{user}}'
+  file:
+    path: '{{hadoop_logs_dir}}'
+    state: directory
+    owner: '{{user}}'
+    group: '{{user}}'
+    mode: 0755
+  when: not folder_stats.stat.exists
+
+- name: step 7 |  Checking hadoop_pid_dir directory exist or not
+  become: yes
+  become_user: '{{user}}'
+  stat:
+   path: "{{hadoop_pid_dir}}"
+  register: folder_stats
+
+- name: Step 8 | create hadoop_pid_dir directory
+  become: yes
+  become_user: '{{user}}'
+  file:
+    path: '{{hadoop_pid_dir}}'
+    state: directory
+    owner: '{{user}}'
+    group: '{{user}}'
+    mode: 0755
+  when: not folder_stats.stat.exists
+
+- name: step 9 |  Checking hadoop_tmp_dir directory exist or not
+  become: yes
+  become_user: '{{user}}'
+  stat:
+   path: "{{hadoop_tmp_dir}}"
+  register: folder_stats
+
+- name: Step 10 | create hadoop_tmp_dir directory
+  become: yes
+  become_user: '{{user}}'
+  file:
+    path: '{{hadoop_tmp_dir}}'
+    state: directory
+    owner: '{{user}}'
+    group: '{{user}}'
+    mode: 0755
+  when: not folder_stats.stat.exists
+
+- name: step 11 |  Checking journalnode_edits directory exist or not
+  become: yes
+  become_user: '{{user}}'
+  stat:
+   path: "{{journalnode_edits}}"
+  register: folder_stats
+
+- name: Step 12 | create journalnode_edits directory
+  become: yes
+  become_user: '{{user}}'
+  file:
+    path: '{{journalnode_edits}}'
+    state: directory
+    owner: '{{user}}'
+    group: '{{user}}'
+    mode: 0755
+  when: not folder_stats.stat.exists
+
+- name: step 13 |  Checking hadoop_datanode_dir directory exist or not
+  become: yes
+  become_user: '{{user}}'
+  stat:
+   path: "{{hadoop_datanode_dir}}"
+  register: folder_stats
+
+- name: Step 14 | create hadoop_datanode_dir directory
+  become: yes
+  become_user: '{{user}}'
+  file:
+    path: '{{hadoop_datanode_dir}}'
+    state: directory
+    owner: '{{user}}'
+    group: '{{user}}'
+    mode: 0755
+  when: not folder_stats.stat.exists
+
+- name: step 15 |  Checking hadoop_namenode_dir directory exist or not
+  become: yes
+  become_user: '{{user}}'
+  stat:
+   path: "{{hadoop_namenode_dir}}"
+  register: folder_stats
+
+- name: Step 16 | create hadoop_namenode_dir directory
+  become: yes
+  become_user: '{{user}}'
+  file:
+    path: '{{hadoop_namenode_dir}}'
+    state: directory
+    owner: '{{user}}'
+    group: '{{user}}'
+    mode: 0755
+  when: not folder_stats.stat.exists
+
+- name: step 17 | Checking dfs.exclude file
+  become: yes
+  become_user: '{{user}}'
+  stat:
+   path: "{{hadoop_dfs_exclude}}"
+  register: folder_stats
+
+- name: step 18 | create dfs.exclude file
+  become: yes
+  become_user: '{{user}}'
+  file: path='{{hadoop_dfs_exclude}}' state=touch owner={{user}} group={{user}} mode=0777
+  when: not folder_stats.stat.exists
+
+- name: Step 19 | copy config files
+  become_user: '{{user}}'
+  template: src={{ item.src }} dest={{ item.dest }}
+  with_items:    
+   - { src: "core-site.xml", dest: '{{ hadoop_conf_dir }}' }
+   - { src: "dfs.exclude", dest: '{{ hadoop_conf_dir }}' }
+   - { src: "hdfs-site.xml", dest: '{{ hadoop_conf_dir }}' }
+   - { src: "hadoop-env.sh", dest: '{{ hadoop_conf_dir }}' }
+   - { src: "slaves", dest: '{{ hadoop_conf_dir }}' }
+   - { src: "log4j.properties", dest: '{{ hadoop_conf_dir }}' }
+  when: groups['master'] | length | int == 1
+
+- name: Step 19 | copy config files
+  become_user: '{{user}}'
+  template: src={{ item.src }} dest={{ item.dest }}
+  with_items:    
+   - { src: "core-site.xml_ha", dest: '{{ hadoop_conf_dir }}/core-site.xml' }
+   - { src: "dfs.exclude", dest: '{{ hadoop_conf_dir }}' }
+   - { src: "hdfs-site.xml_ha", dest: '{{ hadoop_conf_dir }}/hdfs-site.xml' }
+   - { src: "hadoop-env.sh", dest: '{{ hadoop_conf_dir }}' }
+   - { src: "slaves", dest: '{{ hadoop_conf_dir }}' }
+   - { src: "log4j.properties", dest: '{{ hadoop_conf_dir }}' }
+  when: groups['master'] | length | int > 1

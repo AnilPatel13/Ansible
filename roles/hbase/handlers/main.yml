@@ -1,0 +1,11 @@
+---
+# file: roles/hadoop/handlers/main.yml
+
+- name: start hbase
+  shell: start-hbase.sh
+  ignore_errors: yes
+
+
+- name: stop hbase
+  shell: stop-hbase.sh
+  ignore_errors: yes

@@ -1,0 +1,10 @@
+{% for server in groups['master'] %}
+{% if server not in groups['slaves'] %}
+{{server}}
+{% endif %}
+{% endfor %}
+{% for server in groups['slaves'] %}
+{% if server not in groups['master'] %}
+{{ server }}
+{% endif %}
+{% endfor %}

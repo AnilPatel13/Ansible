@@ -1,0 +1,151 @@
+---
+- name: step 1 | Checking {{spark_version}} binary
+  become: yes
+  become_user: '{{user}}'
+  stat:
+   path: "{{BINARIES}}/{{spark_binary}}"
+  register: folder_stats
+
+- name: step 2 | copying {{spark_version}} binary
+  become: yes
+  become_user: '{{user}}'
+  copy:
+    src: ./files/{{spark_binary}}
+    dest: '{{BINARIES}}'
+    owner: '{{user}}'
+    group: '{{user}}'
+  when: not folder_stats.stat.exists
+
+- name: step 3 | check spark directory
+  become: yes
+  become_user: '{{user}}'
+  stat:
+   path: "{{spark_home_path}}"
+  register: folder_stats
+
+- name: step 4 | extract {{spark_version}}
+  become: yes
+  become_user: '{{user}}'
+  unarchive:
+    src: ./files/{{spark_binary}}
+    dest: '{{HOME}}'
+    owner: '{{user}}'
+    group: '{{user}}'
+  when: not folder_stats.stat.exists
+
+- name: step 5 |  Checking spark_tmp_dir directory exist or not
+  become: yes
+  become_user: '{{user}}'
+  stat:
+   path: "{{spark_tmp_dir}}"
+  register: folder_stats
+
+- name: Step 6 | create spark_tmp_dir directory
+  become: yes
+  become_user: '{{user}}'
+  file:
+    path: '{{spark_tmp_dir}}'
+    state: directory
+    owner: '{{user}}'
+    group: '{{user}}'
+    mode: 0755
+  when: not folder_stats.stat.exists
+
+- name: step 7 |  Checking spark_logs_dir directory exist or not
+  become: yes
+  become_user: '{{user}}'
+  stat:
+   path: "{{spark_logs_dir}}"
+  register: folder_stats
+
+- name: Step 8 | create spark_logs_dir directory
+  become: yes
+  become_user: '{{user}}'
+  file:
+    path: '{{spark_logs_dir}}'
+    state: directory
+    owner: '{{user}}'
+    group: '{{user}}'
+    mode: 0755
+  when: not folder_stats.stat.exists
+
+- name: step 9 |  Checking spark_pid_dir directory exist or not
+  become: yes
+  become_user: '{{user}}'
+  stat:
+   path: "{{spark_pid_dir}}"
+  register: folder_stats
+
+- name: Step 10 | create spark_pid_dir directory
+  become: yes
+  become_user: '{{user}}'
+  file:
+    path: '{{spark_pid_dir}}'
+    state: directory
+    owner: '{{user}}'
+    group: '{{user}}'
+    mode: 0755
+  when: not folder_stats.stat.exists
+
+- name: step 11 |  Checking slaves.template file exist or not
+  become: yes
+  become_user: '{{user}}'
+  stat:
+   path: "{{spark_conf_dir}}/slaves.template"
+  register: folder_stats
+
+- name: step 12 |  removing slaves.template file 
+  become: yes
+  become_user: '{{user}}'
+  file:
+   path: "{{spark_conf_dir}}/slaves.template"
+   state: absent
+  when: folder_stats.stat.exists
+
+- name: step 13 |  Checking spark-defaults.conf.template file exist or not
+  become: yes
+  become_user: '{{user}}'
+  stat:
+   path: "{{spark_conf_dir}}/spark-defaults.conf.template"
+  register: folder_stats
+
+- name: step 14 |  removing spark-defaults.conf.template file 
+  become: yes
+  become_user: '{{user}}'
+  file:
+   path: "{{spark_conf_dir}}/spark-defaults.conf.template"
+   state: absent
+  when: folder_stats.stat.exists
+
+- name: step 15 |  Checking spark-env.sh.template file exist or not
+  become: yes
+  become_user: '{{user}}'
+  stat:
+   path: "{{spark_conf_dir}}/spark-env.sh.template"
+  register: folder_stats
+
+- name: step 16 |  removing spark-env.sh.template file 
+  become: yes
+  become_user: '{{user}}'
+  file:
+   path: "{{spark_conf_dir}}/spark-env.sh.template"
+   state: absent
+  when: folder_stats.stat.exists
+
+- name: step 17 | copy config files
+  become_user: '{{user}}'
+  template: src={{ item.src }} dest={{ item.dest }}
+  with_items:    
+   - { src: "slaves", dest: '{{ spark_conf_dir }}' }
+   - { src: "spark-defaults.conf", dest: '{{ spark_conf_dir }}' }
+   - { src: "spark-env.sh", dest: '{{ spark_conf_dir }}' }
+  when: groups['master'] | length | int == 1
+
+- name: step 17 | copy config files
+  become_user: '{{user}}'
+  template: src={{ item.src }} dest={{ item.dest }}
+  with_items:    
+   - { src: "slaves", dest: '{{ spark_conf_dir }}' }
+   - { src: "spark-defaults_ha.conf", dest: '{{ spark_conf_dir }}/spark-defaults.conf' }
+   - { src: "spark-env.sh_ha", dest: '{{ spark_conf_dir }}/spark-env.sh' }
+  when: groups['master'] | length | int > 1

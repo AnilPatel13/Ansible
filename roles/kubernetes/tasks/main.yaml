@@ -1,0 +1,28 @@
+
+- name: Execute K8 commands in master
+  shell: "{{ item }}"
+  become: true
+  become_user: root
+  with_items:
+    - kubeadm init --token {{k8_token}}
+  when: inventory_hostname in groups['master']
+
+- name: Execute K8  other commands in master
+  shell: "{{ item }}"
+  become: true
+  become_user: "{{user}}"
+  with_items:
+    - rm -rf '{{home_directory}}'/.kube
+    - mkdir -p '{{home_directory}}'/.kube
+    - sudo cp -i /etc/kubernetes/admin.conf '{{home_directory}}'/.kube/config
+    - sudo chown '{{user}}':'{{user}}' '{{home_directory}}'/.kube/config
+    - kubectl apply -f "https://cloud.weave.works/k8s/net?k8s-version=$(kubectl version | base64 | tr -d '\n')"
+  when: inventory_hostname in groups['master']
+
+- name: Execute K8 commands in slaves
+  shell: "{{ item }}"
+  become: true
+  become_user: root
+  with_items:
+    -  kubeadm join {{ groups['master'][0] }}:6443 --token "{{k8_token}}" --discovery-token-unsafe-skip-ca-verification
+  when: inventory_hostname in groups['slaves']

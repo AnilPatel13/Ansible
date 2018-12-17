@@ -1,0 +1,62 @@
+#!/bin/bash
+# csync
+# Sync folder to slaves defined in ~/.cslaves
+
+if [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
+    echo 'Sync folder to slaves defined in ~/.cslaves'
+    echo 'Usage: csync [folder]'
+    exit 0
+fi
+
+if [ $# -lt 1 ]; then
+    echo 'Usage: csync [folder]'
+    exit 0
+fi
+
+#strip trailing slash if any
+file=${1%/}
+fchar=$(echo $1 | cut -c 1)
+if [ ! "$fchar" = "/" ] && [ ! "$fchar" = "~" ]; then
+    file=`pwd`/$file
+fi
+
+solo=false
+if [[ -d $file ]]; then
+    file=$file/
+elif [[ -f $file ]]; then
+    solo=true
+else
+    echo 'Does not look like a valid file'
+    exit 0
+fi
+
+OIFS=$IFS
+IFS='
+'
+
+if $solo; then
+    # sync a file
+    thismachine=$(hostid)
+    for slave in $(cat ~/.cslaves); do
+        if [ ${#slave} -gt 0 ] && [ ! "$(echo $slave | cut -c 1)" = "#" ]; then
+            echo "$slave ---"
+            machine=$(ssh $slave hostid)
+            if [ $thismachine = $machine ]; then
+                echo 'skipping local filesystem.'
+            else
+                 scp -o RequestTTY=no -C ${file%/} $user$slave:${file%/}
+            fi
+        fi
+    done
+else
+    # sync a folder
+    for slave in $(cat ~/.cslaves); do
+        if [ ${#slave} -gt 0 ] && [ ! "$(echo $slave | cut -c 1)" = "#" ]; then
+            echo "$slave ---"
+             rsync -e 'ssh -o RequestTTY=no' --protect-args -avz $file $slave:$file
+            echo 'Done'
+        fi
+    done
+fi
+
+IFS=$OIFS

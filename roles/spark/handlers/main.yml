@@ -1,0 +1,11 @@
+---
+# file: roles/spark/handlers/main.yml
+
+- name: start spark
+  shell: /home/zerocrack/stack/spark-1.5.2-bin-2.7.2/sbin/start-all.sh
+  ignore_errors: yes
+
+
+- name: stop stark
+  shell: /home/zerocrack/stack/spark-1.5.2-bin-2.7.2/sbin/start-all.sh
+  ignore_errors: yes

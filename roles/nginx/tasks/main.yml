@@ -1,0 +1,24 @@
+---
+- name: step 1 |  Checking directory exist or not
+  become: yes
+  become_user: '{{user}}'
+  stat:
+   path: "{{nginx_home_path}}"
+  register: folder_stats
+
+- name: Step 2 | create directory
+  become: yes
+  become_user: '{{user}}'
+  file:
+    path: '{{nginx_home_path}}'
+    state: directory
+    owner: '{{user}}'
+    group: '{{user}}'
+    mode: 0755
+  when: not folder_stats.stat.exists
+
+- name: Step 3 | Copy config files
+  become_user: '{{user}}'
+  template: src={{ item.src }} dest={{ item.dest }}
+  with_items:    
+   - { src: "nginx.conf", dest: '{{ nginx_conf_dir }}' }
